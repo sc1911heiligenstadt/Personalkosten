@@ -505,7 +505,7 @@ function renderAll() {
 const FIELD_DEFS = {
   trainer: [
     { key: "name", label: "Name", type: "text", required: true },
-    { key: "mannschaft", label: "Mannschaft", type: "text" },
+    { key: "mannschaft", label: "Mannschaft", type: "text", list: "vereins-mannschaften" },
     { key: "position", label: "Position", type: "paramselect", param: "positionen", allowEmpty: true },
     { key: "jahrgangsleiter", label: "Jahrgangsleiter", type: "paramselect", param: "jahrgangsleiter", allowEmpty: true },
     { key: "lizenz", label: "Lizenz", type: "paramselect", param: "lizenzen", allowEmpty: false },
@@ -516,7 +516,7 @@ const FIELD_DEFS = {
   ],
   schwerpunkt: [
     { key: "name", label: "Name", type: "text", required: true },
-    { key: "mannschaft", label: "Mannschaft", type: "text" },
+    { key: "mannschaft", label: "Mannschaft", type: "text", list: "vereins-mannschaften" },
     { key: "position", label: "Position", type: "text" },
     { key: "einheitenProWoche", label: "Einheiten/Woche", type: "text" },
     { key: "ae", label: "AE / Monat (€)", type: "number" },
@@ -524,7 +524,7 @@ const FIELD_DEFS = {
   ],
   foerderung: [
     { key: "name", label: "Name", type: "text", required: true },
-    { key: "mannschaft", label: "Mannschaft", type: "text" },
+    { key: "mannschaft", label: "Mannschaft", type: "text", list: "vereins-mannschaften" },
     { key: "position", label: "Position", type: "text" },
     { key: "ae", label: "AE / Monat (€)", type: "number" },
     { key: "besonderheit", label: "Besonderheit", type: "text", wide: true }
@@ -540,6 +540,15 @@ function fieldHtml(f) {
     input = `<select id="${id}">${opts}</select>`;
   } else if (f.type === "number" || f.type === "percent") {
     input = `<input type="number" step="${f.type === "percent" ? "1" : "0.01"}" id="${id}" placeholder="${escapeHtml(f.placeholder || "")}" />`;
+  } else if (f.list) {
+    // ⚠️ Die datalist wird HIER mit ausgegeben, nicht einmalig in index.html:
+    // #pf-fields wird bei jedem Öffnen des Modals neu gebaut, eine außerhalb
+    // liegende Liste wäre beim ersten Öffnen noch leer gewesen.
+    // Freitext bleibt möglich — eine datalist schlägt vor, sie verbietet nicht.
+    const opts = vereinsMannschaften
+      .map((m) => `<option value="${escapeHtml(m.kurz)}">${escapeHtml(m.lang)}${m.liga ? " · " + escapeHtml(m.liga) : ""}</option>`)
+      .join("");
+    input = `<input type="text" id="${id}" list="${escapeHtml(f.list)}" autocomplete="off" placeholder="${escapeHtml(f.placeholder || "")}" /><datalist id="${escapeHtml(f.list)}">${opts}</datalist>`;
   } else {
     input = `<input type="text" id="${id}" placeholder="${escapeHtml(f.placeholder || "")}" />`;
   }
@@ -876,6 +885,10 @@ function showConnectScreen(errorMsg) {
   document.getElementById("app-shell").style.display = "none";
   document.getElementById("cloud-error").textContent = errorMsg ? "Fehler: " + errorMsg : "";
 }
+// Vorschläge fürs Mannschaftsfeld im Personen-Modal aus der zentralen
+// Vereinsliste. Wird von fieldHtml() gelesen, sobald das Modal aufgeht.
+let vereinsMannschaften = [];
+
 async function startApp() {
   document.getElementById("connect-screen").style.display = "none";
   document.getElementById("app-shell").style.display = "";
@@ -883,6 +896,9 @@ async function startApp() {
   try { currentUser = await fetchMe(); } catch (_) { /* best effort */ }
   renderHeaderUser();
   applyAdminVisibility();
+  // Kommt zum Schluss: die Liste füllt nur ein Vorschlagsfeld im Modal, die
+  // Tabellen sind ohne sie schon vollständig.
+  vereinsMannschaften = await fetchVereinsMannschaften();
 }
 async function init() {
   setupListeners();

@@ -45,6 +45,19 @@ const BEREICHE = [
 
 const APP_CHANGELOG = [
   {
+    version: "1.1",
+    groups: [
+      {
+        title: "Mannschaften kommen jetzt aus der einen Vereinsliste",
+        items: [
+          "Beim Anlegen oder Bearbeiten einer Person schlägt das Mannschaftsfeld die echten Mannschaften des Vereins vor — dieselbe Liste, die in der Tools-Übersicht gepflegt wird. Das gilt in allen drei Bereichen: Trainer, Schwerpunkttrainer und Förderung.",
+          "Damit steht dieselbe Mannschaft überall gleich geschrieben, und die Auswertung „Nach Mannschaft“ fasst nicht mehr dieselbe Mannschaft in zwei Zeilen auseinander.",
+          "Ein eigener Eintrag bleibt möglich: Stellen ohne feste Mannschaft — Torwarttrainer über alle Jahrgänge, Athletik — lassen sich weiterhin frei eintippen."
+        ]
+      }
+    ]
+  },
+  {
     version: "1.0",
     groups: [
       {
