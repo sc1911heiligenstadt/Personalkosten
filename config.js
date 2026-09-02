@@ -45,67 +45,6 @@ const BEREICHE = [
 
 const APP_CHANGELOG = [
   {
-    version: "1.5",
-    groups: [
-      {
-        title: "Der Reiter „Info“ erklärt jetzt, was die App wirklich tut",
-        items: [
-          "Dort stand bisher ein einzelner Satz. Jetzt steht da, wofür die einzelnen Reiter da sind, was die App mit den Eingaben macht und wo etwas anderes hingehört.",
-          "Am Funktionsumfang ändert sich nichts — nur an der Beschreibung."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.4",
-    groups: [
-      {
-        title: "Beim Sitzungsende wird auch alles neben der Seite geräumt",
-        items: [
-          "Beim Sitzungsende wurde die Seite bereits geleert. Der Personen-Dialog, der Export-Dialog und die Druckansicht stehen aber daneben und blieben mit Namen und Beträgen stehen. Jetzt werden sie mitgeleert.",
-          "Der Hinweis erscheint außerdem an jeder Stelle, an der die Anmeldung wegfällt — vorher nur bei einem Teil der Wege."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.3",
-    groups: [
-      {
-        title: "Beim Abmelden bleibt nichts stehen",
-        items: [
-          "Läuft die Anmeldung ab, während die App offen ist — zum Beispiel weil ein Speichern nach längerer Pause fehlschlägt —, erscheint wie bisher der Hinweis „bitte neu anmelden“.",
-          "Neu ist: der Bildschirm dahinter wird jetzt auch geleert. Vorher wurde er nur unsichtbar gemacht, und alles Angezeigte blieb im Browser stehen — sichtbar für jeden, der sich an denselben Rechner setzt und nachschaut.",
-          "Für dich ändert sich nichts: der Weg zurück war schon immer ein Neuladen der Seite."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.2",
-    groups: [
-      {
-        title: "Am Handy",
-        items: [
-          "Bisher brach die Reiterleiste selbst um, die rechte Reiter-Gruppe darin aber nicht: Sie rutschte als ein Stück in die zweite Zeile und lief dort weiter über den rechten Rand hinaus. Jetzt bricht auch sie um, sobald sie zu breit wird. Zu sehen ist das nur, wenn genug Reiter nebeneinanderstehen — bis dahin sieht alles aus wie bisher."
-        ]
-      }
-    ]
-  },
-  {
-    version: "1.1",
-    groups: [
-      {
-        title: "Mannschaften kommen jetzt aus der einen Vereinsliste",
-        items: [
-          "Beim Anlegen oder Bearbeiten einer Person schlägt das Mannschaftsfeld die echten Mannschaften des Vereins vor — dieselbe Liste, die in der Tools-Übersicht gepflegt wird. Das gilt in allen drei Bereichen: Trainer, Schwerpunkttrainer und Förderung.",
-          "Damit steht dieselbe Mannschaft überall gleich geschrieben, und die Auswertung „Nach Mannschaft“ fasst nicht mehr dieselbe Mannschaft in zwei Zeilen auseinander.",
-          "Ein eigener Eintrag bleibt möglich: Stellen ohne feste Mannschaft — Torwarttrainer über alle Jahrgänge, Athletik — lassen sich weiterhin frei eintippen."
-        ]
-      }
-    ]
-  },
-  {
     version: "1.0",
     groups: [
       {
@@ -113,7 +52,7 @@ const APP_CHANGELOG = [
         items: [
           "Planung und Auswertung der Aufwandsentschädigungen aller Mannschaften — an Stelle der bisherigen Excel-Tabelle.",
           "Drei Bereiche als bearbeitbare Tabellen: Trainer, Schwerpunkttrainer und Förderung.",
-          "Kosten-Übersicht mit Summen je Bereich und je Mannschaft, monatlich und aufs Jahr hochgerechnet.",
+          "Kosten-Übersicht mit Summen je Bereich und je Mannschaft, monatlich und aufs Jahr hochgerechnet — das Jahr mit 11 Monaten, wie in der Excel, wegen der Sommerpause.",
           "Tabellen mit Suche und Filter nach Mannschaft, Position und Lizenz.",
           "Mehrere Saisons planbar; eine bestehende Saison lässt sich als Startpunkt duplizieren."
         ]
@@ -122,19 +61,18 @@ const APP_CHANGELOG = [
         title: "Wie die Aufwandsentschädigung berechnet wird",
         items: [
           "Der Betrag ergibt sich aus Position, Lizenz, Landesebene und Jahrgangsleiter-Funktion und wird mit dem Stellenanteil multipliziert.",
-          "Die Euro-Sätze dahinter stehen im Bereich „Parameter“ und sind dort pflegbar.",
+          "Die Euro-Sätze dahinter stehen im Reiter „Parameter“ und sind dort pflegbar.",
           "Je Person lässt sich der berechnete Wert von Hand überschreiben, wenn eine Vereinbarung davon abweicht.",
-          "Beim Anlegen eines Trainers können Mannschaft und Lizenz aus dem zentralen Trainerprofil übernommen werden — einmalig beim Anlegen, danach frei änderbar."
+          "Beim Anlegen eines Trainers können Mannschaft und Lizenz aus dem zentralen Trainerprofil übernommen werden — einmalig beim Anlegen, danach frei änderbar.",
+          "Schon während des Tippens steht der errechnete Betrag im Formular."
         ]
       },
       {
-        title: "Wer darf was",
+        title: "Mannschaften aus der einen Vereinsliste",
         items: [
-          "Das Werkzeug ist nur für die freigegebene Gruppe sichtbar, weil es sensible Kostendaten enthält.",
-          "Sehen: alle Tabellen und Summen, schreibgeschützt. Die Saison lässt sich zum Ansehen wechseln.",
-          "Bearbeiten: Personen und Parameter anlegen, ändern und löschen. Dazu der Export und das Setzen der gemeinsamen Standard-Saison.",
-          "Administrieren: zusätzlich Saisonverwaltung und Daten-Import im Reiter „Einstellungen“.",
-          "Der Reiter „Info“ ist für alle sichtbar."
+          "Beim Anlegen oder Bearbeiten einer Person schlägt das Mannschaftsfeld die echten Mannschaften des Vereins vor — dieselbe Liste, die in der Tools-Übersicht gepflegt wird. Das gilt in allen drei Bereichen: Trainer, Schwerpunkttrainer und Förderung.",
+          "Damit steht dieselbe Mannschaft überall gleich geschrieben, und die Auswertung „Nach Mannschaft“ fasst nicht dieselbe Mannschaft in zwei Zeilen auseinander.",
+          "Ein eigener Eintrag bleibt möglich: Stellen ohne feste Mannschaft — Torwarttrainer über alle Jahrgänge, Athletik — lassen sich weiterhin frei eintippen."
         ]
       },
       {
@@ -146,6 +84,17 @@ const APP_CHANGELOG = [
         ]
       },
       {
+        title: "Wer darf was",
+        items: [
+          "Das Werkzeug ist nur für die freigegebene Gruppe sichtbar, weil es sensible Kostendaten enthält.",
+          "Sehen: alle Tabellen und Summen, schreibgeschützt. Die Saison lässt sich zum Ansehen wechseln, ohne dass das für andere etwas verstellt.",
+          "Bearbeiten: Personen und Parameter anlegen, ändern und löschen. Dazu der Export und das Umstellen der gemeinsam gültigen Saison.",
+          "Administrieren: zusätzlich die Saisonverwaltung im Reiter „Einstellungen“ und der einmalige Daten-Import.",
+          "Der Reiter „Info“ steht jedem angemeldeten Nutzer offen.",
+          "Fällt die Anmeldung weg, während die App offen ist, räumt sie den Bildschirm samt Personen-Dialog, Export-Dialog und Druckansicht, statt Namen und Beträge im Hintergrund lesbar zu lassen."
+        ]
+      },
+      {
         title: "Bedienung am Handy",
         items: [
           "Die Ansicht ist für das Handy gebaut; Suche und Filter helfen dort mehr als die breite Tabelle.",
@@ -153,9 +102,10 @@ const APP_CHANGELOG = [
         ]
       },
       {
-        title: "Daten & Speicherung",
+        title: "Daten und Speicherung",
         items: [
           "Gespeichert wird in der Vereins-Nextcloud über die zentrale Anmeldung der Tools-Übersicht — ein eigenes Passwort braucht es nicht.",
+          "Im Repo liegen nur die Euro-Sätze, keine Personendaten; die Namen kommen ausschließlich über den einmaligen Import in die Nextcloud.",
           "Ändern zwei Geräte gleichzeitig denselben Stand, erkennt die App das, lädt den fremden Stand nach und sagt Bescheid."
         ]
       }
