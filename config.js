@@ -45,6 +45,20 @@ const BEREICHE = [
 
 const APP_CHANGELOG = [
   {
+    version: "1.1",
+    groups: [
+      {
+        title: "Import fragt jetzt nach dem ganzen Bestand",
+        items: [
+          "Der Daten-Import ersetzt seit jeher alle Saisons auf einmal, gezählt hat die Rückfrage aber nur die gerade geöffnete Saison. Wer eine neue, noch leere Saison angelegt hatte, bekam dort den Import-Hinweis angeboten — und ein Klick darauf räumte ohne ein Wort den kompletten Mehrsaison-Bestand ab.",
+          "Die Rückfrage zählt jetzt über alle Saisons und benennt, was ersetzt wird: wie viele Saisons, welche, und wie viele Personen darin stehen.",
+          "Bringt die Importdatei keine eigenen €-Sätze mit — der Normalfall beim Excel-Bestand —, bleiben die im Reiter „Parameter“ gepflegten Sätze erhalten, statt auf die Startwerte zurückzufallen. Bringt sie welche mit, sagt die Rückfrage das ausdrücklich dazu.",
+          "Der allererste Import in einen noch leeren Stand läuft wie bisher ohne Rückfrage durch."
+        ]
+      }
+    ]
+  },
+  {
     version: "1.0",
     groups: [
       {

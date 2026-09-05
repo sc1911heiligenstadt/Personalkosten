@@ -754,9 +754,32 @@ function handleImportFile(file) {
       alert("Die Datei enthält nicht das erwartete Format ({ seasons: { … } }).");
       return;
     }
-    const total = getSeason().trainer.length + getSeason().schwerpunkt.length + getSeason().foerderung.length;
-    if (total > 0 && !confirm("Es sind bereits Daten vorhanden. Diese durch den Import ERSETZEN?")) return;
-    appData = normalizeData(parsed);
+    // ⚠️ Der Import ersetzt appData KOMPLETT — also alle Saisons, nicht nur die
+    // gerade gewählte. Die Rückfrage muss deshalb über den ganzen Bestand zählen;
+    // über die aktive Saison gezählt entfiel sie genau dann, wenn man in einer
+    // frisch angelegten (leeren) Saison stand — und dort bietet der Banner den
+    // Import aktiv an.
+    const saisons = Object.keys(appData.seasons || {});
+    const personenGesamt = saisons.reduce((a, k) => {
+      const s = appData.seasons[k] || {};
+      return a + (s.trainer || []).length + (s.schwerpunkt || []).length + (s.foerderung || []).length;
+    }, 0);
+    // Bringt die Datei keinen parameter-Block mit (der Normalfall beim Excel-Seed),
+    // würde normalizeData() die gepflegten €-Sätze durch DEFAULT_PARAMETER ersetzen.
+    const bringtParameter = !!(parsed.parameter && typeof parsed.parameter === "object");
+    const parameterGepflegt = JSON.stringify(appData.parameter) !== JSON.stringify(normalizeParameter(null));
+    if (personenGesamt > 0 || saisons.length > 1 || (bringtParameter && parameterGepflegt)) {
+      const was = [];
+      was.push(`${saisons.length} Saison${saisons.length === 1 ? "" : "s"} (${saisons.join(", ")}) mit ${personenGesamt} Person${personenGesamt === 1 ? "" : "en"}`);
+      if (bringtParameter && parameterGepflegt) was.push("die gepflegten €-Sätze im Reiter „Parameter“");
+      const text = "Der Import ERSETZT den kompletten Bestand:\n\n• " + was.join("\n• ") +
+        (bringtParameter ? "" : "\n\n(Die €-Sätze bleiben erhalten — die Datei bringt keine mit.)") +
+        "\n\nWirklich importieren?";
+      if (!confirm(text)) return;
+    }
+    const importiert = normalizeData(parsed);
+    if (!bringtParameter) importiert.parameter = clone(appData.parameter);
+    appData = importiert;
     renderAll();
     const ok = await saveNow();
     if (ok) alert("Import erfolgreich gespeichert.");
