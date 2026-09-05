@@ -418,6 +418,70 @@ const PARAM_GROUPS = [
   { key: "landesebene", label: "Landesebene" },
   { key: "jahrgangsleiter", label: "Jahrgangsleiter" }
 ];
+// Personen und Parameter-Zeilen sind ausschließlich über den Anzeigetext
+// verknüpft (betragOf vergleicht x.label === t.position). Jede Umbenennung und
+// jedes Entfernen reißt diese Verbindung. Die beiden Helfer beantworten darum
+// vor der Änderung: wer hängt daran?
+function paramFelder(group) {
+  const out = [];
+  Object.keys(FIELD_DEFS).forEach((b) => {
+    FIELD_DEFS[b].forEach((f) => {
+      if (f.type === "paramselect" && f.param === group) out.push({ bereich: b, key: f.key });
+    });
+  });
+  return out;
+}
+// Über ALLE Saisons, nicht nur die aktive — die €-Sätze gelten saisonübergreifend.
+function personenMitParamLabel(group, label) {
+  if (!label) return [];
+  const felder = paramFelder(group);
+  const treffer = [];
+  Object.keys(appData.seasons || {}).forEach((k) => {
+    const s = appData.seasons[k] || {};
+    felder.forEach((f) => {
+      (s[f.bereich] || []).forEach((p) => { if (p[f.key] === label) treffer.push({ person: p, key: f.key }); });
+    });
+  });
+  return treffer;
+}
+
+// Benennt eine Parameter-Zeile um. Rückgabe: der Text, der danach gilt — der
+// Aufrufer setzt das Eingabefeld darauf zurück, wenn die Rückfrage abgelehnt wurde.
+function renameParamLabel(group, idx, neu) {
+  const zeile = appData.parameter[group] && appData.parameter[group][idx];
+  if (!zeile) return null;
+  const alt = zeile.label;
+  if (neu === alt) return alt;
+  if (!String(neu).trim()) { alert("Die Bezeichnung darf nicht leer bleiben."); return alt; }
+  const betroffen = personenMitParamLabel(group, alt);
+  if (betroffen.length) {
+    const ok = confirm(`„${alt}“ ist bei ${betroffen.length} Person${betroffen.length === 1 ? "" : "en"} eingetragen — über genau diesen Text findet die Berechnung den €-Satz.\n\nOK: umbenennen in „${neu}“ und bei diesen Personen mitziehen.\nAbbrechen: Umbenennung verwerfen.`);
+    if (!ok) return alt;
+    betroffen.forEach((t) => { t.person[t.key] = neu; });
+  }
+  zeile.label = neu;
+  persist();
+  renderSummary();
+  renderBereich("trainer");
+  populateFilters();
+  return neu;
+}
+
+// Entfernt eine Parameter-Zeile — nicht, ohne vorher zu sagen, wen das Geld kostet.
+function removeParamRow(group, idx) {
+  const zeile = appData.parameter[group] && appData.parameter[group][idx];
+  if (!zeile) return false;
+  const betroffen = personenMitParamLabel(group, zeile.label);
+  if (betroffen.length && !confirm(`„${zeile.label}“ (${numFmt(zeile.betrag, 2)} €) ist bei ${betroffen.length} Person${betroffen.length === 1 ? "" : "en"} eingetragen. Ohne diese Zeile zählt der Satz dort nicht mehr mit, die Aufwandsentschädigung sinkt entsprechend.\n\nZeile trotzdem entfernen?`)) return false;
+  appData.parameter[group].splice(idx, 1);
+  persist();
+  renderParameter();
+  renderSummary();
+  renderBereich("trainer");
+  populateFilters();
+  return true;
+}
+
 function renderParameter() {
   document.getElementById("parameter-groups").innerHTML = PARAM_GROUPS.map((g) => {
     const rows = appData.parameter[g.key].map((r, i) => `
@@ -579,7 +643,19 @@ function openPersonModal(bereich, id) {
     } else if (f.type === "paramselect" && !obj) {
       el.value = f.allowEmpty ? "" : (appData.parameter[f.param][0] ? appData.parameter[f.param][0].label : "");
     } else {
-      el.value = v == null ? "" : v;
+      const gespeichert = v == null ? "" : String(v);
+      el.value = gespeichert;
+      // ⚠️ Ein gespeicherter Wert, den der Parameter-Satz nicht mehr kennt (Zeile
+      // umbenannt oder entfernt), fällt im <select> lautlos auf "" zurück — ein
+      // Klick auf „Speichern“, ohne irgendetwas anzufassen, hätte ihn dann
+      // endgültig aus dem Bestand geschrieben. Darum als eigene Option einhängen.
+      if (f.type === "paramselect" && gespeichert !== "" && el.value !== gespeichert) {
+        const opt = document.createElement("option");
+        opt.value = gespeichert;
+        opt.textContent = gespeichert + " — nicht mehr im Parameter-Satz (0 €)";
+        el.appendChild(opt);
+        el.value = gespeichert;
+      }
     }
   });
 
@@ -1022,19 +1098,29 @@ function setupListeners() {
     if (!canEdit()) return;
     const el = e.target;
     if (!el.dataset.group) return;
-    const g = el.dataset.group, i = Number(el.dataset.idx), k = el.dataset.k;
-    if (k === "betrag") appData.parameter[g][i].betrag = parseFloat(String(el.value).replace(",", ".")) || 0;
-    else appData.parameter[g][i].label = el.value;
+    // Nur der Betrag wird bei jedem Tastendruck übernommen. Das Label ist der
+    // Schlüssel, über den die Personen ihren €-Satz finden — es wird erst beim
+    // Verlassen des Feldes ("change") geschrieben, siehe unten.
+    if (el.dataset.k !== "betrag") return;
+    const zeile = appData.parameter[el.dataset.group][Number(el.dataset.idx)];
+    if (!zeile) return;
+    zeile.betrag = parseFloat(String(el.value).replace(",", ".")) || 0;
     persist();
     renderSummary();
     renderBereich("trainer");
+  });
+  pg.addEventListener("change", (e) => {
+    if (!canEdit()) return;
+    const el = e.target;
+    if (!el.dataset.group || el.dataset.k !== "label") return;
+    const gilt = renameParamLabel(el.dataset.group, Number(el.dataset.idx), el.value);
+    if (gilt != null) el.value = gilt;
   });
   pg.addEventListener("click", (e) => {
     if (!canEdit()) return;
     const rm = e.target.closest("[data-remove]");
     if (rm) {
-      appData.parameter[rm.dataset.remove].splice(Number(rm.dataset.idx), 1);
-      persist(); renderParameter(); renderSummary(); renderBereich("trainer"); populateFilters();
+      removeParamRow(rm.dataset.remove, Number(rm.dataset.idx));
       return;
     }
     const add = e.target.closest("[data-addrow]");

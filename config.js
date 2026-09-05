@@ -45,6 +45,27 @@ const BEREICHE = [
 
 const APP_CHANGELOG = [
   {
+    version: "1.2",
+    groups: [
+      {
+        title: "Umbenannte €-Sätze reißen die Berechnung nicht mehr auseinander",
+        items: [
+          "Personen finden ihren €-Satz über den Text im Reiter „Parameter“. Wurde dort eine Zeile umbenannt — „Cheftrainer“ zu „Cheftrainerin“, „B Elite“ zu „B-Elite“ —, fand die Berechnung nichts mehr und rechnete den Satz stillschweigend mit 0 € weiter: die Aufwandsentschädigung sank, ohne dass irgendwo etwas stand.",
+          "Beim Umbenennen wird jetzt gezählt, wie viele Personen den bisherigen Text tragen — über alle Saisons. Wer bestätigt, benennt um und zieht diese Personen mit; wer abbricht, bekommt den alten Text zurück ins Feld.",
+          "Beim Entfernen einer Zeile sagt die Rückfrage, wie viele Personen betroffen sind und dass ihre Aufwandsentschädigung entsprechend sinkt.",
+          "Die Bezeichnung wird erst beim Verlassen des Feldes übernommen, nicht mehr bei jedem einzelnen Tastendruck. Der €-Betrag daneben zählt weiterhin live mit."
+        ]
+      },
+      {
+        title: "Eine Person verliert ihre Position nicht mehr beim bloßen Speichern",
+        items: [
+          "Stand bei einer Person ein Wert, den der Parameter-Satz nicht mehr kennt, zeigte das Formular beim Öffnen ein leeres Feld — und ein Klick auf „Speichern“, ohne irgendetwas anzufassen, schrieb diese Leere in den Bestand.",
+          "Solche Werte stehen jetzt als eigene Auswahl im Feld, mit dem Hinweis „nicht mehr im Parameter-Satz“. Damit bleibt sichtbar, was hinterlegt war, und Speichern löscht nichts mehr ungefragt."
+        ]
+      }
+    ]
+  },
+  {
     version: "1.1",
     groups: [
       {
