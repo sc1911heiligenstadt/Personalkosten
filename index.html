@@ -70,14 +70,14 @@
         <div class="import-banner hidden" id="import-banner">
           <p>Es sind noch keine Personen erfasst. Der bestehende Excel-Bestand kann einmalig (als JSON-Datei) importiert werden.</p>
           <button class="btn success admin-only hidden" id="btn-import-seed">Datendatei auswählen…</button>
-          <input type="file" id="import-file-input" accept="application/json" class="hidden" />
+          <input type="file" id="import-file-input" aria-label="Datendatei auswählen" accept="application/json" class="hidden" />
         </div>
         <div class="card">
           <div class="filter-bar">
             <input type="search" data-filter="trainer" id="trainer-search" placeholder="Suche nach Name / Mannschaft…" />
-            <select data-filter="trainer" id="trainer-mannschaft"><option value="">Alle Mannschaften</option></select>
-            <select data-filter="trainer" id="trainer-position"><option value="">Alle Positionen</option></select>
-            <select data-filter="trainer" id="trainer-lizenz"><option value="">Alle Lizenzen</option></select>
+            <select data-filter="trainer" id="trainer-mannschaft" aria-label="Trainer nach Mannschaft filtern"><option value="">Alle Mannschaften</option></select>
+            <select data-filter="trainer" id="trainer-position" aria-label="Trainer nach Position filtern"><option value="">Alle Positionen</option></select>
+            <select data-filter="trainer" id="trainer-lizenz" aria-label="Trainer nach Lizenz filtern"><option value="">Alle Lizenzen</option></select>
             <span class="filter-count" id="trainer-count"></span>
           </div>
           <div class="table-scroll">
@@ -99,8 +99,8 @@
         <div class="card">
           <div class="filter-bar">
             <input type="search" data-filter="schwerpunkt" id="schwerpunkt-search" placeholder="Suche nach Name / Mannschaft…" />
-            <select data-filter="schwerpunkt" id="schwerpunkt-mannschaft"><option value="">Alle Mannschaften</option></select>
-            <select data-filter="schwerpunkt" id="schwerpunkt-position"><option value="">Alle Positionen</option></select>
+            <select data-filter="schwerpunkt" id="schwerpunkt-mannschaft" aria-label="Schwerpunkte nach Mannschaft filtern"><option value="">Alle Mannschaften</option></select>
+            <select data-filter="schwerpunkt" id="schwerpunkt-position" aria-label="Schwerpunkte nach Position filtern"><option value="">Alle Positionen</option></select>
             <span class="filter-count" id="schwerpunkt-count"></span>
           </div>
           <div class="table-scroll">
@@ -121,8 +121,8 @@
         <div class="card">
           <div class="filter-bar">
             <input type="search" data-filter="foerderung" id="foerderung-search" placeholder="Suche nach Name / Mannschaft…" />
-            <select data-filter="foerderung" id="foerderung-mannschaft"><option value="">Alle Mannschaften</option></select>
-            <select data-filter="foerderung" id="foerderung-position"><option value="">Alle Positionen</option></select>
+            <select data-filter="foerderung" id="foerderung-mannschaft" aria-label="Förderung nach Mannschaft filtern"><option value="">Alle Mannschaften</option></select>
+            <select data-filter="foerderung" id="foerderung-position" aria-label="Förderung nach Position filtern"><option value="">Alle Positionen</option></select>
             <span class="filter-count" id="foerderung-count"></span>
           </div>
           <div class="table-scroll">
