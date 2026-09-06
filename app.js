@@ -617,7 +617,7 @@ function fieldHtml(f) {
   } else {
     input = `<input type="text" id="${id}" placeholder="${escapeHtml(f.placeholder || "")}" />`;
   }
-  return `<div class="form-field${f.wide ? " wide" : ""}"><label>${escapeHtml(f.label)}${f.required ? " *" : ""}</label>${input}</div>`;
+  return `<div class="form-field${f.wide ? " wide" : ""}"><label for="${id}">${escapeHtml(f.label)}${f.required ? " *" : ""}</label>${input}</div>`;
 }
 
 function openPersonModal(bereich, id) {
