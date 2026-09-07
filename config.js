@@ -43,7 +43,112 @@ const BEREICHE = [
   { id: "foerderung", label: "Förderung", berechnet: false }
 ];
 
+// Was die Personalkosten-App kann -- steht im Info-Reiter als Karte "Funktionen".
+// WICHTIG: Das ist NICHT der Changelog. Hier steht der ZUSTAND ("der Betrag wird
+// berechnet"), dort die Aenderung ("wird JETZT berechnet"). Wer eine Funktion
+// umbaut oder abschaltet, zieht diesen Text mit -- und ebenso
+// E:\SC1911-Tools-Anleitung.txt, wo dasselbe ausfuehrlich steht.
+const APP_FUNKTIONEN = [
+  {
+    title: "Übersicht",
+    items: [
+      "Planung und Auswertung der Aufwandsentschädigungen aller Mannschaften — an Stelle der bisherigen Excel-Tabelle.",
+      "Der Reiter „Übersicht“ zeigt die Summen je Bereich und je Mannschaft, monatlich und aufs Jahr hochgerechnet.",
+      "Das Jahr wird mit elf Monaten gerechnet, nicht mit zwölf — wegen der Sommerpause, genau wie in der Excel."
+    ]
+  },
+  {
+    title: "Die drei Bereiche",
+    items: [
+      "„Trainer“, „Schwerpunkttrainer“ und „Förderung“ stehen als eigene Reiter mit bearbeitbaren Tabellen nebeneinander.",
+      "Beim Trainer wird der Betrag gerechnet; bei Schwerpunkttrainern und in der Förderung wird er direkt eingetragen.",
+      "Jede Tabelle hat eine Suche und Filter nach Mannschaft, Position und Lizenz."
+    ]
+  },
+  {
+    title: "Wie die Aufwandsentschädigung berechnet wird",
+    items: [
+      "Der Betrag ergibt sich aus Position, Lizenz, Landesebene und Jahrgangsleiter-Funktion und wird mit dem Stellenanteil multipliziert.",
+      "Schon während des Tippens steht der errechnete Betrag im Formular.",
+      "Je Person lässt sich der berechnete Wert von Hand überschreiben, wenn eine Vereinbarung davon abweicht.",
+      "Beim Anlegen eines Trainers lassen sich Mannschaft und Lizenz aus dem zentralen Trainerprofil übernehmen — einmalig beim Anlegen, danach frei änderbar."
+    ]
+  },
+  {
+    title: "Parameter: die Euro-Sätze",
+    items: [
+      "Im Reiter „Parameter“ stehen die Sätze, aus denen sich die Berechnung speist. Sie gelten für alle Saisons gemeinsam.",
+      "Wird eine Zeile umbenannt, zählt die Rückfrage, wie viele Personen den bisherigen Text tragen, und zieht sie beim Bestätigen mit. Sonst würde ihr Satz stillschweigend auf 0 € fallen.",
+      "Beim Entfernen einer Zeile sagt die Rückfrage ebenfalls, wie viele Personen betroffen sind.",
+      "Steht bei einer Person ein Wert, den der Parameter-Satz nicht mehr kennt, bleibt er im Feld stehen — mit dem Hinweis „nicht mehr im Parameter-Satz“, damit Speichern ihn nicht ungefragt löscht."
+    ]
+  },
+  {
+    title: "Mannschaften aus der einen Vereinsliste",
+    items: [
+      "Das Mannschaftsfeld schlägt die echten Mannschaften des Vereins vor — dieselbe Liste, die in der Tools-Übersicht gepflegt wird. Das gilt in allen drei Bereichen.",
+      "Damit steht dieselbe Mannschaft überall gleich geschrieben, und die Auswertung „Nach Mannschaft“ zieht sie nicht in zwei Zeilen auseinander.",
+      "Ein eigener Eintrag bleibt möglich: Stellen ohne feste Mannschaft — Torwarttrainer über alle Jahrgänge, Athletik — lassen sich frei eintippen."
+    ]
+  },
+  {
+    title: "Mehrere Saisons",
+    items: [
+      "Mehrere Saisons lassen sich parallel planen; eine bestehende Saison lässt sich als Startpunkt duplizieren.",
+      "Zum Ansehen kann jeder die Saison wechseln, ohne dass sich das für andere verstellt. Die gemeinsam gültige Saison umzustellen ist ein Bearbeiten-Recht.",
+      "Angelegt und gelöscht werden Saisons im Reiter „Einstellungen“."
+    ]
+  },
+  {
+    title: "Export",
+    items: [
+      "Die Personalübersicht lässt sich in drei Formaten ausgeben: als Text zum Weitergeben, als CSV für Excel und als PDF zum Drucken oder Ablegen.",
+      "Im CSV sind die Zahlenspalten echte Zahlen und lassen sich direkt weiterrechnen.",
+      "Welche Bereiche und welche Spalten mitkommen, ist frei wählbar."
+    ]
+  },
+  {
+    title: "Wer was darf",
+    items: [
+      "Das Werkzeug ist nur für die freigegebene Gruppe sichtbar, weil es sensible Kostendaten enthält.",
+      "Sehen: alle Tabellen und Summen, schreibgeschützt.",
+      "Bearbeiten: Personen und Parameter anlegen, ändern und löschen, dazu der Export und das Umstellen der gemeinsam gültigen Saison.",
+      "Administrieren: zusätzlich der Reiter „Einstellungen“ mit der Saisonverwaltung und dem einmaligen Daten-Import.",
+      "Der Reiter „Info“ steht jedem angemeldeten Nutzer offen."
+    ]
+  },
+  {
+    title: "Daten und Speicherung",
+    items: [
+      "Gespeichert wird in der Vereins-Nextcloud über die zentrale Anmeldung der Tools-Übersicht — ein eigenes Passwort braucht es nicht.",
+      "Im Repo liegen nur die Euro-Sätze, keine Personendaten. Die Namen kommen ausschließlich über den einmaligen Import in die Nextcloud.",
+      "Ändern zwei Geräte gleichzeitig denselben Stand, erkennt die App das, lädt den fremden Stand nach und sagt Bescheid.",
+      "Fällt die Anmeldung weg, während die App offen ist, räumt sie den Bildschirm samt Personen-Dialog, Export-Dialog und Druckansicht, statt Namen und Beträge lesbar stehen zu lassen."
+    ]
+  },
+  {
+    title: "Am Handy",
+    items: [
+      "Die Ansicht ist für das Handy gebaut; Suche und Filter helfen dort mehr als die breite Tabelle.",
+      "Die Eingabefelder sind groß genug, dass der iPhone-Browser beim Antippen nicht ungefragt in die Seite hineinzoomt."
+    ]
+  }
+];
+
 const APP_CHANGELOG = [
+  {
+    version: "1.4",
+    groups: [
+      {
+        title: "Im Info-Reiter steht jetzt, was die App kann",
+        items: [
+          "Die Liste der Änderungen und die Versionsnummer sind aus dem Info-Reiter verschwunden.",
+          "Stattdessen steht dort die Karte „Funktionen“: was die App kann, nach Themen geordnet.",
+          "Was sich geändert hat, steht weiterhin in den Neuigkeiten auf der Startseite der Tools-Übersicht."
+        ]
+      }
+    ]
+  },
   {
     version: "1.3",
     groups: [
